@@ -1,25 +1,27 @@
 # Shopping Cart Analysis
 
-Phân tích dữ liệu bán lẻ để tìm ra mối quan hệ giữa các sản phẩm thường được mua cùng nhau bằng các kỹ thuật **Association Rule Mining** (Apriori). Project triển khai pipeline đầy đủ từ xử lý dữ liệu → phân tích → khai thác luật → sinh báo cáo.
+Phân tích dữ liệu bán lẻ nhằm khám phá mối quan hệ giữa các sản phẩm thường được mua cùng nhau bằng kỹ thuật **Association Rule Mining (Apriori)**. Project triển khai **pipeline hoàn chỉnh** từ xử lý dữ liệu → phân tích → khai thác luật → trực quan hóa → sinh báo cáo, phù hợp với tư duy Data Mining và Data Engineering.
 
 ---
 
 ## Features
 
-- Làm sạch dữ liệu & xử lý giá trị lỗi
-- Xây dựng basket matrix (transaction × product)
-- Khai phá tập mục phổ biến (Frequent itemsets)
-- Sinh luật kết hợp (Association Rules)
-- Các chỉ số:
-  - Support
-  - Confidence
-  - Lift
-- Visualization với:
-  - bar chart
-  - scatter plot
-  - network graph
-  - interactive Plotly
-- Tự động hóa pipeline bằng **Papermill**
+* Làm sạch dữ liệu bán lẻ (loại bỏ hóa đơn hủy, dữ liệu lỗi)
+* Xây dựng **basket matrix** (transaction × product)
+* Khai phá **Frequent Itemsets** bằng Apriori
+* Sinh **Association Rules**
+* Đánh giá luật bằng các chỉ số:
+
+  * Support
+  * Confidence
+  * Lift
+* Trực quan hóa dữ liệu:
+
+  * Bar chart (Top rules)
+  * Scatter plot (Support – Confidence – Lift)
+  * Network graph (quan hệ sản phẩm)
+  * Biểu đồ tương tác Plotly
+* Tự động hóa pipeline notebook bằng **Papermill**
 
 ---
 
@@ -60,97 +62,116 @@ shopping_cart_analysis/
 git clone <your_repo_url>
 cd shopping_cart_analysis
 pip install -r requirements.txt
-Data Preparation
-Đặt file gốc vào:
 ```
+
+### Data Preparation
+
+Đặt file dữ liệu gốc vào thư mục:
 
 ```bash
 data/raw/online_retail.csv
-File output sẽ được sinh tự động vào:
 ```
+
+Các file dữ liệu trung gian và kết quả sẽ được sinh tự động tại:
 
 ```bash
 data/processed/
 ```
 
-Run Pipeline (Recommended)
-Chạy toàn bộ phân tích chỉ với 1 lệnh:
+---
+
+## Run Pipeline (Recommended)
+
+Chạy toàn bộ pipeline phân tích chỉ với **một lệnh**:
 
 ```bash
 python run_papermill.py
 ```
-Kết quả sinh ra:
 
-```bash
+### Output sinh ra
+
+```text
 data/processed/cleaned_uk_data.csv
 data/processed/basket_bool.parquet
 data/processed/rules_apriori_filtered.csv
 notebooks/runs/apriori_modelling_run.ipynb
 ```
 
-### Changing Parameters
-Các tham số có thể chỉnh trong run_papermill.py:
+Notebook trong thư mục `notebooks/runs/` chứa **toàn bộ kết quả, bảng luật và biểu đồ**.
+
+---
+
+## Changing Parameters
+
+Các tham số Apriori có thể điều chỉnh trong `run_papermill.py`:
 
 ```python
-MIN_SUPPORT=0.01
-MAX_LEN=3
-FILTER_MIN_CONF=0.3
-FILTER_MIN_LIFT=1.2
+MIN_SUPPORT = 0.01
+MAX_LEN = 3
+FILTER_MIN_CONF = 0.3
+FILTER_MIN_LIFT = 1.2
 ```
 
-Hoặc sửa trong cell PARAMETERS của mỗi notebook để chạy với cấu hình khác nhau.
+Hoặc chỉnh trực tiếp trong cell **PARAMETERS** của từng notebook để thử nghiệm các cấu hình khác nhau.
 
-### Visualization & Results
-Notebook 03 hiển thị các biểu đồ sau:
+---
 
-Top luật theo Lift
+## Visualization & Results
 
-Top luật theo Confidence
+Notebook `apriori_modelling_run.ipynb` hiển thị các biểu đồ:
 
-Scatter Support–Confidence–Lift
+* Top luật theo **Lift**
+* Top luật theo **Confidence**
+* Scatter plot: Support – Confidence – Lift
+* Network Graph thể hiện mối quan hệ giữa các sản phẩm
+* Biểu đồ **Plotly tương tác**
 
-Network Graph giữa các sản phẩm
-
-Biểu đồ Plotly tương tác
-
-Bạn có thể export sang HTML:
+Có thể export notebook sang HTML:
 
 ```bash
-jupyter nbconvert notebooks/runs/priori_modelling_run.ipynb --to html
+jupyter nbconvert notebooks/runs/apriori_modelling_run.ipynb --to html
 ```
 
-### Ứng dụng thực tế
-Product recommendation
+---
 
-Cross-selling strategy
+## Ứng dụng thực tế
 
-Combo gợi ý sản phẩm
+* Gợi ý sản phẩm (Product Recommendation)
+* Chiến lược **Cross-selling**
+* Tạo combo sản phẩm
+* Phân tích hành vi mua hàng
+* Sắp xếp, trưng bày sản phẩm trong siêu thị / website
 
-Phân tích hành vi mua hàng
+---
 
-Sắp xếp sản phẩm tại siêu thị
+## Tech Stack
 
-### Tech Stack
+| Công nghệ        | Mục đích                      |
+| ---------------- | ----------------------------- |
+| Python           | Ngôn ngữ chính                |
+| Pandas           | Xử lý dữ liệu giao dịch       |
+| MLxtend          | Apriori / Association Rules   |
+| Papermill        | Tự động hóa pipeline notebook |
+| Matplotlib       | Biểu đồ tĩnh                  |
+| Plotly           | Biểu đồ tương tác             |
+| Jupyter Notebook | Môi trường phân tích          |
 
-| Công nghệ | Mục đích |
-|----------|----------|
-| Python | Ngôn ngữ chính |
-| Pandas | Xử lý dữ liệu transaction |
-| MLxtend | Apriori / FP-Growth association rules |
-| Papermill | Chạy pipeline notebook tự động |
-| Matplotlib & Seaborn | Visualization biểu đồ tĩnh |
-| Plotly | Dashboard / biểu đồ tương tác |
-| Jupyter Notebook | Môi trường notebook |
+---
 
-### Roadmap
- Thêm FP-Growth notebook (04)
+## Roadmap
 
- Streamlit dashboard để lọc luật
+* [ ] Thêm notebook **FP-Growth**
+* [ ] Xây dựng **Streamlit Dashboard** để lọc và phân tích luật
 
+---
 
-### Author
+## Author
+
 Project được thực hiện bởi:
-Trang Le
+**Trang Lê**
 
-📄 License
-MIT — sử dụng tự do cho nghiên cứu, học thuật và ứng dụng nội bộ.
+---
+
+## License
+
+MIT License — sử dụng tự do cho mục đích học tập, nghiên cứu và ứng dụng nội bộ.
